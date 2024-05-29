@@ -1,16 +1,14 @@
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, json } from 'react-router-dom';
 import EventsList from '../components/EventsList';
 
 function EventsPage() {
 
-  const events= useLoaderData();
+  const data= useLoaderData();
+  const events= data.events;
+
   return <EventsList events={events}/>;
     
-      {/* <div style={{ textAlign: 'center' }}>
-        {isLoading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
-      </div> */}
-      
+
     
   
 };
@@ -21,10 +19,16 @@ export async function loader () {
     const response = await fetch('http://localhost:8080/events');
 
           if (!response.ok) {
-            
+              // throw new Response(JSON.stringify({ message: 'could not fetch events.'}),
+              //   {status: 500},
+              //   );
+              //or we can do this 
+            throw json ({message: 'could not fetch events.'},
+              {status: 500}
+            );
+
           } else {
-            const resData = await response.json();
-            return resData.events;
+            return response;
           }
 
 };
